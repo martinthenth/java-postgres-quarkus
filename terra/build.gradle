@@ -28,6 +28,9 @@ java {
 
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+    testLogging {
+        exceptionFormat "full"
+    }
 }
 compileJava {
     options.encoding = 'UTF-8'
