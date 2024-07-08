@@ -5,7 +5,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,12 +20,32 @@ class UserControllerTest {
     class Show {
         @Test
         @DisplayName("Shows a user")
-        void showUser() {
+        void show() {
             User user = new User();
-            UserController controller = new UserController();
-            User result = controller.show();
+            User result = new UserController().show("123");
 
             assertEquals(user.id, result.id);
+        }
+
+        @Test
+        @DisplayName("Shows a user (integration)")
+        void showIntegration() {
+            User user = new User();
+
+            given()
+                    .pathParam("id", user.id)
+                    .when().get("/user/{id}")
+                    .then()
+                    .statusCode(200)
+                    .body(is("{" +
+                            "\"id\":\"123\"," +
+                            "\"firstName\":\"firstName\"," +
+                            "\"lastName\":\"lastName\"," +
+                            "\"emailAddress\":\"emailAddress.com\"," +
+                            "\"createdAt\":\"now\"," +
+                            "\"updatedAt\":\"now\"," +
+                            "\"deletedAt\":null" +
+                            "}"));
         }
     }
 
@@ -35,18 +54,29 @@ class UserControllerTest {
     class Create {
         @Test
         @DisplayName("Creates a user")
-        void createUser() {
-            assert false;
+        void create() {
+            User result = new UserController().create();
+
+            assertEquals("firstName", result.firstName);
+            assertEquals("lastName", result.lastName);
         }
 
         @Test
         @DisplayName("Creates a user (integration)")
-        void createUserIntegration() {
+        void createIntegration() {
             given()
                     .when().post("/user")
                     .then()
                     .statusCode(200)
-                    .body(is("Hello from Quarkus REST"));
+                    .body(is("{" +
+                            "\"id\":\"123\"," +
+                            "\"firstName\":\"firstName\"," +
+                            "\"lastName\":\"lastName\"," +
+                            "\"emailAddress\":\"emailAddress.com\"," +
+                            "\"createdAt\":\"now\"," +
+                            "\"updatedAt\":\"now\"," +
+                            "\"deletedAt\":null" +
+                            "}"));
         }
     }
 
@@ -55,8 +85,32 @@ class UserControllerTest {
     class Update {
         @Test
         @DisplayName("Updates a user")
-        void updateUser() {
-            assert false;
+        void update() {
+            User user = new User();
+            User result = new UserController().update(user.id);
+
+            assertEquals(user.id, result.id);
+        }
+
+        @Test
+        @DisplayName("Updates a user (integration)")
+        void updateIntegration() {
+            User user = new User();
+
+            given()
+                    .pathParam("id", user.id)
+                    .when().patch("/user/{id}")
+                    .then()
+                    .statusCode(200)
+                    .body(is("{" +
+                            "\"id\":\"123\"," +
+                            "\"firstName\":\"firstName\"," +
+                            "\"lastName\":\"lastName\"," +
+                            "\"emailAddress\":\"emailAddress.com\"," +
+                            "\"createdAt\":\"now\"," +
+                            "\"updatedAt\":\"now\"," +
+                            "\"deletedAt\":null" +
+                            "}"));
         }
     }
 
@@ -65,13 +119,33 @@ class UserControllerTest {
     class Delete {
         @Test
         @DisplayName("Deletes a user")
-        void deleteUser() {
+        void delete() {
             User user = new User();
-            UserController controller = new UserController();
-            User result = controller.delete();
+            User result = new UserController().delete(user.id);
 
             assertEquals(user.id, result.id);
-            assertNotEquals(user.deletedAt, null);
+            assertEquals(user.deletedAt, null);
+        }
+
+        @Test
+        @DisplayName("Deletes a user (integration)")
+        void deleteIntegration() {
+            User user = new User();
+
+            given()
+                    .pathParam("id", user.id)
+                    .when().delete("/user/{id}")
+                    .then()
+                    .statusCode(200)
+                    .body(is("{" +
+                            "\"id\":\"123\"," +
+                            "\"firstName\":\"firstName\"," +
+                            "\"lastName\":\"lastName\"," +
+                            "\"emailAddress\":\"emailAddress.com\"," +
+                            "\"createdAt\":\"now\"," +
+                            "\"updatedAt\":\"now\"," +
+                            "\"deletedAt\":null" +
+                            "}"));
         }
     }
 }

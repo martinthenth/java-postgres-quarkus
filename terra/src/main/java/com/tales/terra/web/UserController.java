@@ -21,7 +21,8 @@ public class UserController {
      * @return a User object
      */
     @GET
-    public User show() {
+    @Path("{id}")
+    public User show(String id) {
         return new User();
     }
 
@@ -33,6 +34,8 @@ public class UserController {
      */
     @POST
     public User create() {
+        // TODO: Take the parameters, and create a new user object (or change the
+        // fields)
         return new User();
     }
 
@@ -43,7 +46,10 @@ public class UserController {
      * @return a User object
      */
     @PATCH
-    public User update() {
+    @Path("{id}")
+    public User update(String id) {
+        // TODO: Take the parameters, and create a new user object (or change the
+        // fields)
         return new User();
     }
 
@@ -54,7 +60,9 @@ public class UserController {
      * @return a User object
      */
     @DELETE
-    public User delete() {
+    @Path("{id}")
+    public User delete(String id) {
+        // TODO: Set the `deletedAt` field to a value `"now"`
         return new User();
     }
 }
