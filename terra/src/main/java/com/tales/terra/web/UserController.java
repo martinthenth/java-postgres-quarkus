@@ -1,12 +1,7 @@
 package com.tales.terra.web;
 
 import com.tales.terra.core.User;
-import com.tales.terra.rpc.v1.RpcService;
-import com.tales.terra.rpc.v1.get_user.v1.GetUserRequest;
-import com.tales.terra.rpc.v1.get_user.v1.GetUserResponse;
 
-import io.quarkus.grpc.GrpcClient;
-import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -19,9 +14,6 @@ import jakarta.ws.rs.Path;
  */
 @Path("/user")
 public class UserController {
-    @GrpcClient
-    RpcService terra;
-
     /**
      * Show a user.
      * This method handles GET requests to retrieve user information.
@@ -29,11 +21,8 @@ public class UserController {
      * @return a User object
      */
     @GET
-    public Uni<String> show() {
-        String name = "Jane";
-
-        return terra.getUser(GetUserRequest.newBuilder().setName(name).build())
-                .onItem().transform(GetUserResponse::getMessage);
+    public User show() {
+        return new User();
     }
 
     /**
@@ -44,7 +33,7 @@ public class UserController {
      */
     @POST
     public User create() {
-        return new User("Martin", "Nijboer");
+        return new User();
     }
 
     /**
