@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package com.tales.terra.rpc.v1.get_user.v1;
+
+message GetUserRequest {
+  string name = 1;
+}
+
+message GetUserResponse {
+  string message = 1;
+}
