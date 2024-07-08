@@ -33,7 +33,7 @@ public class UserController {
      */
     @POST
     public User create() {
-        return new User();
+        return new User("Martin", "Nijboer");
     }
 
     /**
