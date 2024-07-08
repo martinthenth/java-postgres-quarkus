@@ -19,8 +19,8 @@ import jakarta.ws.rs.Path;
  */
 @Path("/user")
 public class UserController {
-    @GrpcClient("terra-rpc")
-    RpcService terraRpc;
+    @GrpcClient
+    RpcService terra;
 
     /**
      * Show a user.
@@ -32,7 +32,7 @@ public class UserController {
     public Uni<String> show() {
         String name = "Jane";
 
-        return terraRpc.getUser(GetUserRequest.newBuilder().setName(name).build())
+        return terra.getUser(GetUserRequest.newBuilder().setName(name).build())
                 .onItem().transform(GetUserResponse::getMessage);
     }
 

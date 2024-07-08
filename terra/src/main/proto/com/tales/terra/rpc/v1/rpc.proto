@@ -2,8 +2,10 @@ syntax = "proto3";
 
 package com.tales.terra.rpc.v1;
 
+import "com/tales/terra/rpc/v1/create_user/v1/create_user.proto";
 import "com/tales/terra/rpc/v1/get_user/v1/get_user.proto";
 
 service RpcService {
   rpc GetUser(get_user.v1.GetUserRequest) returns (get_user.v1.GetUserResponse) {}
+  rpc CreateUser(create_user.v1.CreateUserRequest) returns (create_user.v1.CreateUserResponse) {}
 }
