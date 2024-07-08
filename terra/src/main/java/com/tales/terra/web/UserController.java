@@ -1,9 +1,9 @@
 package com.tales.terra.web;
 
 import com.tales.terra.core.User;
-import com.tales.example.Greeter;
-import com.tales.example.HelloReply;
-import com.tales.example.HelloRequest;
+import com.tales.terra.rpc.v1.RpcService;
+import com.tales.terra.rpc.v1.get_user.v1.GetUserRequest;
+import com.tales.terra.rpc.v1.get_user.v1.GetUserResponse;
 
 import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Uni;
@@ -19,8 +19,8 @@ import jakarta.ws.rs.Path;
  */
 @Path("/user")
 public class UserController {
-    @GrpcClient("client-name")
-    Greeter hello;
+    @GrpcClient("terra-rpc")
+    RpcService terraRpc;
 
     /**
      * Show a user.
@@ -32,8 +32,8 @@ public class UserController {
     public Uni<String> show() {
         String name = "Jane";
 
-        return hello.sayHello(HelloRequest.newBuilder().setName(name).build())
-                .onItem().transform(HelloReply::getMessage);
+        return terraRpc.getUser(GetUserRequest.newBuilder().setName(name).build())
+                .onItem().transform(GetUserResponse::getMessage);
     }
 
     /**

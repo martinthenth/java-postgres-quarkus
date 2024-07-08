@@ -4,10 +4,6 @@ package com.tales.terra.rpc.v1;
 
 import "com/tales/terra/rpc/v1/get_user/v1/get_user.proto";
 
-// option java_multiple_files = true;
-// option java_outer_classname = "HelloWorldProto";
-// option java_package = "io.quarkus.example";
-
 service RpcService {
   rpc GetUser(get_user.v1.GetUserRequest) returns (get_user.v1.GetUserResponse) {}
 }
