@@ -3,6 +3,6 @@ package com.tales.terra;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class GreetingResourceIT extends GreetingResourceTest {
+class UserControllerNativeTest extends UserControllerTest {
     // Execute the same tests but in packaged mode.
 }
