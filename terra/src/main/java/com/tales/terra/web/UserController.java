@@ -1,7 +1,12 @@
 package com.tales.terra.web;
 
 import com.tales.terra.core.User;
+import com.tales.example.Greeter;
+import com.tales.example.HelloReply;
+import com.tales.example.HelloRequest;
 
+import io.quarkus.grpc.GrpcClient;
+import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -14,6 +19,9 @@ import jakarta.ws.rs.Path;
  */
 @Path("/user")
 public class UserController {
+    @GrpcClient("client-name")
+    Greeter hello;
+
     /**
      * Show a user.
      * This method handles GET requests to retrieve user information.
@@ -21,8 +29,11 @@ public class UserController {
      * @return a User object
      */
     @GET
-    public User show() {
-        return new User();
+    public Uni<String> show() {
+        String name = "Jane";
+
+        return hello.sayHello(HelloRequest.newBuilder().setName(name).build())
+                .onItem().transform(HelloReply::getMessage);
     }
 
     /**
