@@ -1,11 +1,11 @@
 package com.tales.terra.web;
 
-import java.util.List;
-
 import com.tales.terra.core.Greeting;
 import com.tales.terra.core.Greetings;
 import com.tales.terra.core.User;
+import com.tales.terra.core.User2;
 import com.tales.terra.core.Users;
+import com.tales.terra.core.Users2;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -48,29 +48,12 @@ public class UserController {
      */
     @POST
     @Transactional
-    public User create(@NotNull @Valid CreateParams params) {
-        // System.out.println(params);
-        // System.out.println(params.firstName);
-        // System.out.println(params.lastName);
+    public User2 create(@NotNull @Valid CreateParams params) {
+        Users2.CreateAttrs attrs = new Users2.CreateAttrs();
+        attrs.firstName = params.firstName;
+        attrs.lastName = params.lastName;
 
-        // TODO: `null` passes with `200` status code
-
-        // Greeting greeting = new Greeting();
-        // greeting.name = "Martin";
-        // greeting.persist();
-
-        // System.out.println(greeting);
-
-        // List<Greeting> greetings = Greeting.listAll();
-
-        // System.out.println(greetings);
-
-        Greeting greeting = new Greetings().createGreeting("Martin");
-
-        System.out.println(greeting);
-        System.out.println(greeting.name);
-
-        return Users.createUser();
+        return new Users2().createUser(attrs);
     }
 
     /**

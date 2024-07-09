@@ -10,10 +10,13 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import com.tales.terra.core.User;
+import com.tales.terra.core.User2;
 import com.tales.terra.web.UserController;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.ws.rs.core.MediaType;
+
+import java.util.HashMap;
 
 @QuarkusTest
 class UserControllerTest {
@@ -61,7 +64,7 @@ class UserControllerTest {
             params.firstName = "Jane";
             params.lastName = "Doe";
 
-            User result = new UserController().create(params);
+            User2 result = new UserController().create(params);
 
             assertEquals("firstName", result.firstName);
             assertEquals("lastName", result.lastName);
@@ -70,22 +73,20 @@ class UserControllerTest {
         @Test
         @DisplayName("Creates a user (integration)")
         void createsUserIntegration() {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("firstName", "Jane");
+            params.put("lastName", "Doe");
+
             given()
                     .contentType(MediaType.APPLICATION_JSON)
-                    .body("{" +
-                            "\"firstName\": \"Jane\"," +
-                            "\"lastName\": \"Doe\"" +
-                            "}")
+                    .body(params)
                     .when()
                     .post("/user")
                     .then()
                     .statusCode(200)
-                    .body("id", is("123"))
-                    .body("firstName", is("firstName"))
-                    .body("lastName", is("lastName"))
-                    .body("emailAddress", is("emailAddress.com"))
-                    .body("createdAt", is("now"))
-                    .body("updatedAt", is("now"))
+                    .body("firstName", is("Jane"))
+                    .body("lastName", is("Doe"))
+                    // .body("emailAddress", is("emailAddress.com"))
                     .body("deletedAt", nullValue());
         }
 
