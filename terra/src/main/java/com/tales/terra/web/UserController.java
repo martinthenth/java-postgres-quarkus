@@ -1,7 +1,11 @@
 package com.tales.terra.web;
 
 import com.tales.terra.core.User;
+import com.tales.terra.core.Users;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
@@ -15,6 +19,26 @@ import jakarta.ws.rs.Path;
 @Path("/user")
 public class UserController {
     /**
+     * The CreateParams class defines parameters for the create user endpoint.
+     */
+    public static class CreateParams {
+        @NotBlank
+        public String firstName;
+        @NotBlank
+        public String lastName;
+    }
+
+    /**
+     * The UpdateParams class defines parameters for the update user endpoint.
+     */
+    public static class UpdateParams {
+        @NotBlank
+        public String firstName;
+        @NotBlank
+        public String lastName;
+    }
+
+    /**
      * Show a user.
      * This method handles GET requests to retrieve user information.
      * 
@@ -22,8 +46,8 @@ public class UserController {
      */
     @GET
     @Path("{id}")
-    public User show(String id) {
-        return new User();
+    public User show(@NotNull String id) {
+        return Users.getUser(id);
     }
 
     /**
@@ -33,10 +57,14 @@ public class UserController {
      * @return a User object
      */
     @POST
-    public User create() {
-        // TODO: Take the parameters, and create a new user object (or change the
-        // fields)
-        return new User();
+    public User create(@NotNull @Valid CreateParams params) {
+        // System.out.println(params);
+        // System.out.println(params.firstName);
+        // System.out.println(params.lastName);
+
+        // TODO: `null` passes with `200` status code
+
+        return Users.createUser();
     }
 
     /**
@@ -47,10 +75,11 @@ public class UserController {
      */
     @PATCH
     @Path("{id}")
-    public User update(String id) {
-        // TODO: Take the parameters, and create a new user object (or change the
-        // fields)
-        return new User();
+    public User update(@NotNull String id, @NotNull @Valid UpdateParams params) {
+        // System.out.println(id);
+        // System.out.println(params);
+
+        return Users.updateUser(id);
     }
 
     /**
@@ -61,8 +90,7 @@ public class UserController {
      */
     @DELETE
     @Path("{id}")
-    public User delete(String id) {
-        // TODO: Set the `deletedAt` field to a value `"now"`
-        return new User();
+    public User delete(@NotNull String id) {
+        return Users.deleteUser(id);
     }
 }
