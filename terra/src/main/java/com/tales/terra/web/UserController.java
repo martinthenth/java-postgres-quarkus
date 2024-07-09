@@ -1,7 +1,7 @@
 package com.tales.terra.web;
 
-import com.tales.terra.core.User2;
-import com.tales.terra.core.Users2;
+import com.tales.terra.core.User;
+import com.tales.terra.core.Users;
 
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Path("/user")
 public class UserController {
     @Inject
-    private Users2 users;
+    private Users users;
 
     /** Parameters for creating a user. */
     public static class CreateParams {
@@ -50,8 +50,8 @@ public class UserController {
      */
     @POST
     @Transactional
-    public User2 create(@NotNull @Valid CreateParams params) {
-        Users2.CreateAttrs attrs = new Users2.CreateAttrs();
+    public User create(@NotNull @Valid CreateParams params) {
+        Users.CreateAttrs attrs = new Users.CreateAttrs();
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
 
@@ -67,7 +67,7 @@ public class UserController {
      */
     @GET
     @Path("{id}")
-    public User2 show(@NotNull UUID id) {
+    public User show(@NotNull UUID id) {
         return users.getUser(id);
     }
 
@@ -81,7 +81,7 @@ public class UserController {
      */
     @PATCH
     @Path("{id}")
-    public User2 update(@NotNull UUID id, @NotNull @Valid UpdateParams params) {
+    public User update(@NotNull UUID id, @NotNull @Valid UpdateParams params) {
         // System.out.println(id);
         // System.out.println(params);
 
@@ -97,7 +97,7 @@ public class UserController {
      */
     @DELETE
     @Path("{id}")
-    public User2 delete(@NotNull UUID id) {
+    public User delete(@NotNull UUID id) {
         return users.deleteUser(id);
     }
 }

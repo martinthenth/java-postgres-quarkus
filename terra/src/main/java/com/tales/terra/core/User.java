@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import java.util.UUID;
 
 @Entity
-public class User2 {
+public class User {
     // TODO: Generate uuid v7
     // TODO: Make fields final
     @Id
@@ -21,11 +21,11 @@ public class User2 {
     public String updatedAt;
     public String deletedAt;
 
-    public User2() {
+    public User() {
         this.id = UUID.randomUUID();
     }
 
-    public User2(String firstName, String lastName) {
+    public User(String firstName, String lastName) {
         this.id = UUID.randomUUID();
         this.firstName = firstName;
         this.lastName = lastName;
