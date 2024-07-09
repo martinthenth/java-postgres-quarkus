@@ -57,7 +57,7 @@ public class UserController {
      * @return a User object
      */
     @POST
-    public User create(@NotNull @Valid CreateParams params) {
+    public User create(@Valid @NotNull CreateParams params) {
         // System.out.println(params);
         // System.out.println(params.firstName);
         // System.out.println(params.lastName);
@@ -75,7 +75,7 @@ public class UserController {
      */
     @PATCH
     @Path("{id}")
-    public User update(@NotNull String id, @NotNull @Valid UpdateParams params) {
+    public User update(@NotNull String id, @Valid @NotNull UpdateParams params) {
         // System.out.println(id);
         // System.out.println(params);
 

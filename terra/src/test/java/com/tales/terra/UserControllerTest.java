@@ -1,10 +1,8 @@
 package com.tales.terra;
 
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.ws.rs.core.MediaType;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import com.tales.terra.core.User;
 import com.tales.terra.web.UserController;
+
+import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 class UserControllerTest {
@@ -39,15 +40,14 @@ class UserControllerTest {
                     .when().get("/user/{id}")
                     .then()
                     .statusCode(200)
-                    .body(is("{" +
-                            "\"id\":\"123\"," +
-                            "\"firstName\":\"firstName\"," +
-                            "\"lastName\":\"lastName\"," +
-                            "\"emailAddress\":\"emailAddress.com\"," +
-                            "\"createdAt\":\"now\"," +
-                            "\"updatedAt\":\"now\"," +
-                            "\"deletedAt\":null" +
-                            "}"));
+                    .body("id", is("123"))
+                    .body("firstName", is("firstName"))
+                    .body("lastName", is("lastName"))
+                    .body("emailAddress", is("emailAddress.com"))
+                    .body("createdAt", is("now"))
+                    .body("updatedAt", is("now"))
+                    .body("deletedAt", nullValue());
+
         }
     }
 
@@ -80,15 +80,13 @@ class UserControllerTest {
                     .post("/user")
                     .then()
                     .statusCode(200)
-                    .body(is("{" +
-                            "\"id\":\"123\"," +
-                            "\"firstName\":\"firstName\"," +
-                            "\"lastName\":\"lastName\"," +
-                            "\"emailAddress\":\"emailAddress.com\"," +
-                            "\"createdAt\":\"now\"," +
-                            "\"updatedAt\":\"now\"," +
-                            "\"deletedAt\":null" +
-                            "}"));
+                    .body("id", is("123"))
+                    .body("firstName", is("firstName"))
+                    .body("lastName", is("lastName"))
+                    .body("emailAddress", is("emailAddress.com"))
+                    .body("createdAt", is("now"))
+                    .body("updatedAt", is("now"))
+                    .body("deletedAt", nullValue());
         }
 
         @Test
@@ -103,15 +101,13 @@ class UserControllerTest {
                     .when()
                     .post("/user")
                     .then()
-                    .statusCode(400);
-            // .body(is("{" +
-            // "\"title\":\"Constraint Violation\"," +
-            // "\"status\":400," +
-            // "\"violations\":[" +
-            // "{\"field\":\"create.params.firstName\",\"message\":\"must not be blank\"},"
-            // +
-            // "{\"field\":\"create.params.lastName\",\"message\":\"must not be blank\"}]" +
-            // "}"));
+                    .statusCode(400)
+                    .body("title", is("Constraint Violation"))
+                    .body("status", is(400))
+                    .rootPath("violations.find { it.field == 'create.params.firstName' }")
+                    .body("message", is("must not be blank"))
+                    .rootPath("violations.find { it.field == 'create.params.lastName' }")
+                    .body("message", is("must not be blank"));
         }
 
         @Test
@@ -122,13 +118,11 @@ class UserControllerTest {
                     .when()
                     .post("/user")
                     .then()
-                    .statusCode(400);
-            // .body(is("{" +
-            // "\"title\":\"Constraint Violation\"," +
-            // "\"status\":400," +
-            // "\"violations\":[{\"field\":\"create.params\",\"message\":\"must not be
-            // null\"}]" +
-            // "}"));
+                    .statusCode(400)
+                    .body("title", is("Constraint Violation"))
+                    .body("status", is(400))
+                    .body("violations[0].field", is("create.params"))
+                    .body("violations[0].message", is("must not be null"));
         }
     }
 
@@ -166,15 +160,13 @@ class UserControllerTest {
                     .patch("/user/{id}")
                     .then()
                     .statusCode(200)
-                    .body(is("{" +
-                            "\"id\":\"123\"," +
-                            "\"firstName\":\"firstName\"," +
-                            "\"lastName\":\"lastName\"," +
-                            "\"emailAddress\":\"emailAddress.com\"," +
-                            "\"createdAt\":\"now\"," +
-                            "\"updatedAt\":\"now\"," +
-                            "\"deletedAt\":null" +
-                            "}"));
+                    .body("id", is("123"))
+                    .body("firstName", is("firstName"))
+                    .body("lastName", is("lastName"))
+                    .body("emailAddress", is("emailAddress.com"))
+                    .body("createdAt", is("now"))
+                    .body("updatedAt", is("now"))
+                    .body("deletedAt", nullValue());
         }
 
         @Test
@@ -192,15 +184,13 @@ class UserControllerTest {
                     .when()
                     .patch("/user/{id}")
                     .then()
-                    .statusCode(400);
-            // .body(is("{" +
-            // "\"title\":\"Constraint Violation\"," +
-            // "\"status\":400," +
-            // "\"violations\":[" +
-            // "{\"field\":\"create.params.firstName\",\"message\":\"must not be blank\"},"
-            // +
-            // "{\"field\":\"create.params.lastName\",\"message\":\"must not be blank\"}]" +
-            // "}"));
+                    .statusCode(400)
+                    .body("title", is("Constraint Violation"))
+                    .body("status", is(400))
+                    .rootPath("violations.find { it.field == 'update.params.firstName' }")
+                    .body("message", is("must not be blank"))
+                    .rootPath("violations.find { it.field == 'update.params.lastName' }")
+                    .body("message", is("must not be blank"));
         }
 
         @Test
@@ -214,14 +204,11 @@ class UserControllerTest {
                     .when()
                     .patch("/user/{id}")
                     .then()
-                    .statusCode(400);
-            // .body(is("{" +
-            // "\"title\":\"Constraint Violation\"," +
-            // "\"status\":400," +
-            // "\"violations\":[{\"field\":\"create.params\",\"message\":\"must not be
-            // null\"}]" +
-            // "}"));
-
+                    .statusCode(400)
+                    .body("title", is("Constraint Violation"))
+                    .body("status", is(400))
+                    .body("violations[0].field", is("update.params"))
+                    .body("violations[0].message", is("must not be null"));
         }
     }
 
@@ -249,15 +236,13 @@ class UserControllerTest {
                     .when().delete("/user/{id}")
                     .then()
                     .statusCode(200)
-                    .body(is("{" +
-                            "\"id\":\"123\"," +
-                            "\"firstName\":\"firstName\"," +
-                            "\"lastName\":\"lastName\"," +
-                            "\"emailAddress\":\"emailAddress.com\"," +
-                            "\"createdAt\":\"now\"," +
-                            "\"updatedAt\":\"now\"," +
-                            "\"deletedAt\":null" +
-                            "}"));
+                    .body("id", is("123"))
+                    .body("firstName", is("firstName"))
+                    .body("lastName", is("lastName"))
+                    .body("emailAddress", is("emailAddress.com"))
+                    .body("createdAt", is("now"))
+                    .body("updatedAt", is("now"))
+                    .body("deletedAt", nullValue());
         }
     }
 }
