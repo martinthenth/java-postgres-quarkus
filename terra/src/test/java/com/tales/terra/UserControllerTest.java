@@ -9,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.tales.terra.core.User;
 import com.tales.terra.core.User2;
 import com.tales.terra.web.UserController;
 
@@ -30,8 +29,8 @@ class UserControllerTest {
         @Test
         @DisplayName("Shows the user")
         void show() {
-            User user = new User();
-            User result = controller.show(user.id);
+            User2 user = new User2();
+            User2 result = controller.show(user.id);
 
             assertEquals(user.id, result.id);
         }
@@ -39,7 +38,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Shows the user (integration)")
         void showIntegration() {
-            User user = new User();
+            User2 user = new User2();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -137,12 +136,12 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user")
         void updatesUser() {
-            User user = new User();
+            User2 user = new User2();
             UserController.UpdateParams params = new UserController.UpdateParams();
             params.firstName = "Janeth";
             params.lastName = "Doer";
 
-            User result = controller.update(user.id, params);
+            User2 result = controller.update(user.id, params);
 
             assertEquals(user.id, result.id);
             assertEquals(user.firstName, result.firstName);
@@ -152,7 +151,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user (integration)")
         void updatesUserIntegration() {
-            User user = new User();
+            User2 user = new User2();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -177,7 +176,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Invalid parameters (integration)")
         void invalidParametersIntegration() {
-            User user = new User();
+            User2 user = new User2();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -201,7 +200,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Missing parameters (integration)")
         void missingParametersIntegration() {
-            User user = new User();
+            User2 user = new User2();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -223,8 +222,8 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user")
         void delete() {
-            User user = new User();
-            User result = controller.delete(user.id);
+            User2 user = new User2();
+            User2 result = controller.delete(user.id);
 
             assertEquals(user.id, result.id);
             assertEquals(user.deletedAt, null);
@@ -233,7 +232,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user (integration)")
         void deleteIntegration() {
-            User user = new User();
+            User2 user = new User2();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)

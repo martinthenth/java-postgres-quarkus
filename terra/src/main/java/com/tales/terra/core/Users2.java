@@ -31,4 +31,16 @@ public class Users2 implements PanacheRepositoryBase<User2, UUID> {
 
         return user;
     }
+
+    public User2 getUser(UUID id) {
+        return new User2();
+    }
+
+    public User2 updateUser(UUID id) {
+        return new User2();
+    }
+
+    public User2 deleteUser(UUID id) {
+        return new User2();
+    }
 }

@@ -1,8 +1,6 @@
 package com.tales.terra.web;
 
-import com.tales.terra.core.User;
 import com.tales.terra.core.User2;
-import com.tales.terra.core.Users;
 import com.tales.terra.core.Users2;
 
 import jakarta.inject.Inject;
@@ -15,6 +13,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+
+import java.util.UUID;
 
 /**
  * The UserController class provides RESTful endpoints to manage users.
@@ -67,8 +67,8 @@ public class UserController {
      */
     @GET
     @Path("{id}")
-    public User show(@NotNull String id) {
-        return Users.getUser(id);
+    public User2 show(@NotNull UUID id) {
+        return users.getUser(id);
     }
 
     /**
@@ -81,11 +81,11 @@ public class UserController {
      */
     @PATCH
     @Path("{id}")
-    public User update(@NotNull String id, @NotNull @Valid UpdateParams params) {
+    public User2 update(@NotNull UUID id, @NotNull @Valid UpdateParams params) {
         // System.out.println(id);
         // System.out.println(params);
 
-        return Users.updateUser(id);
+        return users.updateUser(id);
     }
 
     /**
@@ -97,7 +97,7 @@ public class UserController {
      */
     @DELETE
     @Path("{id}")
-    public User delete(@NotNull String id) {
-        return Users.deleteUser(id);
+    public User2 delete(@NotNull UUID id) {
+        return users.deleteUser(id);
     }
 }

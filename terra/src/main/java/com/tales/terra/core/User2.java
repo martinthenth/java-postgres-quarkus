@@ -17,13 +17,16 @@ public class User2 {
     public String firstName;
     public String lastName;
     public String emailAddress;
+    public String createdAt;
+    public String updatedAt;
     public String deletedAt;
 
     public User2() {
-
+        this.id = UUID.randomUUID();
     }
 
     public User2(String firstName, String lastName) {
+        this.id = UUID.randomUUID();
         this.firstName = firstName;
         this.lastName = lastName;
     }
