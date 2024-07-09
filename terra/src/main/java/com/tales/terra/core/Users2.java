@@ -1,11 +1,13 @@
 package com.tales.terra.core;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
-// TODO: I'd prefer it if it wasn't a class but an interface
+@ApplicationScoped
 public class Users2 implements PanacheRepositoryBase<User2, UUID> {
     /** Attributes for creating a user. */
     public static class CreateAttrs {
@@ -16,10 +18,15 @@ public class Users2 implements PanacheRepositoryBase<User2, UUID> {
     }
 
     // TODO: This is a mess
+    /**
+     * TODO
+     * 
+     * @param attrs
+     * @return
+     */
+    @Transactional
     public User2 createUser(CreateAttrs attrs) {
-        User2 user = new User2();
-        user.firstName = attrs.firstName;
-        user.lastName = attrs.lastName;
+        User2 user = new User2(attrs.firstName, attrs.lastName);
         persist(user);
 
         return user;

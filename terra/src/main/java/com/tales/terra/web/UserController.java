@@ -1,12 +1,11 @@
 package com.tales.terra.web;
 
-import com.tales.terra.core.Greeting;
-import com.tales.terra.core.Greetings;
 import com.tales.terra.core.User;
 import com.tales.terra.core.User2;
 import com.tales.terra.core.Users;
 import com.tales.terra.core.Users2;
 
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -23,6 +22,9 @@ import jakarta.ws.rs.Path;
  */
 @Path("/user")
 public class UserController {
+    @Inject
+    private Users2 users;
+
     /** Parameters for creating a user. */
     public static class CreateParams {
         @NotBlank
@@ -53,7 +55,7 @@ public class UserController {
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
 
-        return new Users2().createUser(attrs);
+        return users.createUser(attrs);
     }
 
     /**

@@ -16,10 +16,15 @@ public class User2 {
     public UUID id;
     public String firstName;
     public String lastName;
+    public String emailAddress;
     public String deletedAt;
 
     public User2() {
-        this.firstName = "Maritn";
-        this.lastName = "Nijboer";
+
+    }
+
+    public User2(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }

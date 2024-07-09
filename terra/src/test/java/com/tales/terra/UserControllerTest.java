@@ -14,12 +14,16 @@ import com.tales.terra.core.User2;
 import com.tales.terra.web.UserController;
 
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
 import java.util.HashMap;
 
 @QuarkusTest
 class UserControllerTest {
+    @Inject
+    UserController controller;
+
     @Nested
     @DisplayName("Show")
     class Show {
@@ -27,7 +31,7 @@ class UserControllerTest {
         @DisplayName("Shows the user")
         void show() {
             User user = new User();
-            User result = new UserController().show(user.id);
+            User result = controller.show(user.id);
 
             assertEquals(user.id, result.id);
         }
@@ -64,10 +68,10 @@ class UserControllerTest {
             params.firstName = "Jane";
             params.lastName = "Doe";
 
-            User2 result = new UserController().create(params);
+            User2 result = controller.create(params);
 
-            assertEquals("firstName", result.firstName);
-            assertEquals("lastName", result.lastName);
+            assertEquals(params.firstName, result.firstName);
+            assertEquals(params.lastName, result.lastName);
         }
 
         @Test
@@ -138,7 +142,7 @@ class UserControllerTest {
             params.firstName = "Janeth";
             params.lastName = "Doer";
 
-            User result = new UserController().update(user.id, params);
+            User result = controller.update(user.id, params);
 
             assertEquals(user.id, result.id);
             assertEquals(user.firstName, result.firstName);
@@ -220,7 +224,7 @@ class UserControllerTest {
         @DisplayName("Deletes the user")
         void delete() {
             User user = new User();
-            User result = new UserController().delete(user.id);
+            User result = controller.delete(user.id);
 
             assertEquals(user.id, result.id);
             assertEquals(user.deletedAt, null);
