@@ -31,6 +31,8 @@ public class UserController {
         public String firstName;
         @NotBlank
         public String lastName;
+        @NotBlank
+        public String emailAddress;
     }
 
     /** Parameters for updating a user. */
@@ -54,6 +56,7 @@ public class UserController {
         Users.CreateAttrs attrs = new Users.CreateAttrs();
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
+        attrs.emailAddress = params.emailAddress;
 
         return users.createUser(attrs);
     }
@@ -82,10 +85,11 @@ public class UserController {
     @PATCH
     @Path("{id}")
     public User update(@NotNull UUID id, @NotNull @Valid UpdateParams params) {
-        // System.out.println(id);
-        // System.out.println(params);
+        Users.UpdateAttrs attrs = new Users.UpdateAttrs();
+        attrs.firstName = params.firstName;
+        attrs.lastName = params.lastName;
 
-        return users.updateUser(id);
+        return users.updateUser(id, attrs);
     }
 
     /**

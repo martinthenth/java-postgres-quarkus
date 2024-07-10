@@ -9,8 +9,6 @@ public class Greetings implements PanacheRepository<Greeting> {
 
         persist(greeting);
 
-        // TODO: Return greeting
-
         return greeting;
     }
 
