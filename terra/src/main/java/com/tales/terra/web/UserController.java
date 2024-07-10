@@ -23,7 +23,7 @@ import java.util.UUID;
 @Path("/user")
 public class UserController {
     @Inject
-    private Users users;
+    Users users;
 
     /** Parameters for creating a user. */
     public static class CreateParams {

@@ -16,16 +16,18 @@ import com.tales.terra.core.Users;
 import com.tales.terra.web.UserController;
 
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 class UserControllerTest {
-    @Inject
-    private UserController controller;
+    UserController controller;
+    Users users;
 
-    @Inject
-    private Users users;
+    // TODO: One alternative is to NOT inject anything, and use @Transactional here?
+    UserControllerTest(UserController controller, Users users) {
+        this.controller = controller;
+        this.users = users;
+    }
 
     private User insertUser() {
         Users.CreateAttrs attrs = new Users.CreateAttrs();
