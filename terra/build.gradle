@@ -9,12 +9,12 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.quarkus:quarkus-jdbc-postgresql'
-    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-arc'
     implementation "io.quarkus:quarkus-grpc"
+    implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-hibernate-validator'
+    implementation 'io.quarkus:quarkus-jdbc-postgresql'
     implementation 'io.quarkus:quarkus-rest'
     implementation "io.quarkus:quarkus-rest-jackson" 
     testImplementation 'io.quarkus:quarkus-junit5'
