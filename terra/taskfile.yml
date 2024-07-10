@@ -17,5 +17,5 @@ tasks:
     silent: false
   test:
     cmds:
-      - ./gradlew test
+      - ./gradlew test {{.CLI_ARGS}}
     silent: false
