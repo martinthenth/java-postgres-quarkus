@@ -11,6 +11,8 @@ import jakarta.validation.constraints.NotBlank;
 
 @ApplicationScoped
 public class Users implements PanacheRepositoryBase<User, UUID> {
+    // TODO: Clean up the persistence so it's more like Elixir + Ectp
+
     /** Attributes for creating a user. */
     public static class CreateAttrs {
         @NotBlank

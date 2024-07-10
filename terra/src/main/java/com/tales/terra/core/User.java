@@ -16,6 +16,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(name = "users")
 public class User {
+    // TODO: Generate uuid v7
+    // TODO: Make fields final
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     public UUID id;
@@ -33,7 +35,4 @@ public class User {
     public LocalDateTime updatedAt;
     @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
     public LocalDateTime deletedAt;
-
-    // TODO: Generate uuid v7
-    // TODO: Make fields final
 }
