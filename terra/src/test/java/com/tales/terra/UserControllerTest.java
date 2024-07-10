@@ -27,18 +27,22 @@ class UserControllerTest {
     @Inject
     private Users users;
 
+    private User insertUser() {
+        Users.CreateAttrs attrs = new Users.CreateAttrs();
+        attrs.firstName = "Jane";
+        attrs.lastName = "Doe";
+        attrs.emailAddress = "jane.doe@example.com";
+
+        return users.createUser(attrs);
+    }
+
     @Nested
     @DisplayName("Show")
     class Show {
         @Test
         @DisplayName("Shows the user")
         void show() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
             User result = controller.show(user.id);
 
             assertEquals(user.id, result.id);
@@ -47,12 +51,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Shows the user (integration)")
         void showIntegration() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -156,12 +155,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user")
         void updatesUser() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
             params.firstName = "Janeth";
             params.lastName = "Doer";
@@ -176,12 +170,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user (integration)")
         void updatesUserIntegration() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
             params.firstName = "Janeth";
             params.lastName = "Doer";
@@ -206,12 +195,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Invalid parameters (integration)")
         void invalidParametersIntegration() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
             params.firstName = "";
             params.lastName = "";
@@ -235,12 +219,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Missing parameters (integration)")
         void missingParametersIntegration() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -262,12 +241,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user")
         void delete() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
             User result = controller.delete(user.id);
 
             assertEquals(user.id, result.id);
@@ -277,12 +251,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user (integration)")
         void deleteIntegration() {
-            Users.CreateAttrs attrs = new Users.CreateAttrs();
-            attrs.firstName = "Jane";
-            attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
-
-            User user = users.createUser(attrs);
+            User user = insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
