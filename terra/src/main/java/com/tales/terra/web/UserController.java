@@ -29,8 +29,10 @@ public class UserController {
     public static class CreateParams {
         @NotBlank
         public String firstName;
+
         @NotBlank
         public String lastName;
+
         @NotBlank
         public String emailAddress;
     }
@@ -39,6 +41,7 @@ public class UserController {
     public static class UpdateParams {
         @NotBlank
         public String firstName;
+
         @NotBlank
         public String lastName;
     }
@@ -54,6 +57,7 @@ public class UserController {
     @Transactional
     public User create(@NotNull @Valid CreateParams params) {
         Users.CreateAttrs attrs = new Users.CreateAttrs();
+
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
         attrs.emailAddress = params.emailAddress;
@@ -86,6 +90,7 @@ public class UserController {
     @Path("{id}")
     public User update(@NotNull UUID id, @NotNull @Valid UpdateParams params) {
         Users.UpdateAttrs attrs = new Users.UpdateAttrs();
+
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
 

@@ -30,45 +30,12 @@ class UserControllerTest {
     @Transactional
     User insertUser() {
         Users.CreateAttrs attrs = new Users.CreateAttrs();
+
         attrs.firstName = "Jane";
         attrs.lastName = "Doe";
         attrs.emailAddress = "jane.doe@example.com";
 
         return users.createUser(attrs);
-    }
-
-    @Nested
-    @DisplayName("Show")
-    class Show {
-        @Test
-        @DisplayName("Shows the user")
-        void show() {
-            User user = insertUser();
-            User result = controller.show(user.id);
-
-            assertEquals(user.id, result.id);
-        }
-
-        @Test
-        @DisplayName("Shows the user (integration)")
-        void showIntegration() {
-            User user = insertUser();
-
-            given()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .pathParam("id", user.id)
-                    .when().get("/user/{id}")
-                    .then()
-                    .statusCode(200)
-                    .body("id", is(user.id.toString()))
-                    .body("firstName", is(user.firstName))
-                    .body("lastName", is(user.lastName))
-                    .body("emailAddress", is(user.emailAddress))
-                    .body("createdAt", is(user.createdAt.toString()))
-                    .body("updatedAt", is(user.updatedAt.toString()))
-                    .body("deletedAt", nullValue());
-
-        }
     }
 
     @Nested
@@ -78,6 +45,7 @@ class UserControllerTest {
         @DisplayName("Creates a user")
         void createsUser() {
             UserController.CreateParams params = new UserController.CreateParams();
+
             params.firstName = "Jane";
             params.lastName = "Doe";
             params.emailAddress = "jane.doe@example.com";
@@ -92,6 +60,7 @@ class UserControllerTest {
         @DisplayName("Creates a user (integration)")
         void createsUserIntegration() {
             UserController.CreateParams params = new UserController.CreateParams();
+
             params.firstName = "Jane";
             params.lastName = "Doe";
             params.emailAddress = "jane.doe@example.com";
@@ -113,6 +82,7 @@ class UserControllerTest {
         @DisplayName("Invalid parameters (integration)")
         void invalidParametersIntegration() {
             UserController.CreateParams params = new UserController.CreateParams();
+
             params.firstName = "";
             params.lastName = "";
             params.emailAddress = "";
@@ -151,6 +121,40 @@ class UserControllerTest {
     }
 
     @Nested
+    @DisplayName("Show")
+    class Show {
+        @Test
+        @DisplayName("Shows the user")
+        void show() {
+            User user = insertUser();
+            User result = controller.show(user.id);
+
+            assertEquals(user.id, result.id);
+        }
+
+        @Test
+        @DisplayName("Shows the user (integration)")
+        void showIntegration() {
+            User user = insertUser();
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", user.id)
+                    .when().get("/user/{id}")
+                    .then()
+                    .statusCode(200)
+                    .body("id", is(user.id.toString()))
+                    .body("firstName", is(user.firstName))
+                    .body("lastName", is(user.lastName))
+                    .body("emailAddress", is(user.emailAddress))
+                    .body("createdAt", is(user.createdAt.toString()))
+                    .body("updatedAt", is(user.updatedAt.toString()))
+                    .body("deletedAt", nullValue());
+
+        }
+    }
+
+    @Nested
     @DisplayName("Update")
     class Update {
         @Test
@@ -158,6 +162,7 @@ class UserControllerTest {
         void updatesUser() {
             User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
+
             params.firstName = "Janeth";
             params.lastName = "Doer";
 
@@ -173,6 +178,7 @@ class UserControllerTest {
         void updatesUserIntegration() {
             User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
+
             params.firstName = "Janeth";
             params.lastName = "Doer";
 
@@ -198,6 +204,7 @@ class UserControllerTest {
         void invalidParametersIntegration() {
             User user = insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
+
             params.firstName = "";
             params.lastName = "";
 
