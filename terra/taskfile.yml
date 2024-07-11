@@ -1,0 +1,21 @@
+version: 3
+tasks:
+  build:
+    cmds:
+      - ./gradlew build
+    silent: false
+  native.build:
+    cmds:
+      - ./gradlew build -Dquarkus.native.enabled=true -Dquarkus.package.jar.enabled=false
+    silent: false
+  native.run:
+    cmds:
+      - ./build/terra-1.0.0-SNAPSHOT-runner
+  native.test:
+    cmds:
+      - ./gradlew testNative -Dquarkus.package.jar.enabled=false
+    silent: false
+  test:
+    cmds:
+      - ./gradlew test {{.CLI_ARGS}}
+    silent: false

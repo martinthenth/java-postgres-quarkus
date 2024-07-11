@@ -1,4 +1,6 @@
+buf 1.34.0
 gradle 8.8
-java openjdk-22.0.1
+java oracle-graalvm-22
 nodejs 22.4.0
 quarkus 3.12.1
+task 3.38.0

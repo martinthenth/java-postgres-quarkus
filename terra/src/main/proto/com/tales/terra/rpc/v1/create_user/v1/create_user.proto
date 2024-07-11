@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.tales.terra.rpc.v1.create_user.v1;
+
+option java_multiple_files = true;
+
+message CreateUserRequest {
+  string name = 1;
+}
+
+message CreateUserResponse {
+  string message = 1;
+}
