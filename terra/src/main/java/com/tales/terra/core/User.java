@@ -11,7 +11,6 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.f4b6a3.uuid.UuidCreator;
 
 @Entity
@@ -27,13 +26,10 @@ public class User {
     public String emailAddress;
     @CreationTimestamp
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime createdAt;
     @UpdateTimestamp
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime updatedAt;
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime deletedAt;
 }
