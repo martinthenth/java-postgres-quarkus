@@ -40,6 +40,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      * @param id
      * @return a User object
      */
+    @Transactional
     public User getUser(UUID id) {
         return findById(id);
     }
@@ -109,7 +110,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
         if (user == null)
             throw new RuntimeException("Not found");
         if (user.deletedAt != null)
-            throw new RuntimeException("Already deleted");
+            throw new RuntimeException("Is deleted");
 
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 
