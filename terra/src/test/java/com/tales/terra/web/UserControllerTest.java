@@ -11,32 +11,20 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import com.tales.terra.core.TestFactory;
 import com.tales.terra.core.User;
-import com.tales.terra.core.Users;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.MediaType;
 
 @QuarkusTest
 class UserControllerTest {
     @Inject
-    UserController controller;
+    TestFactory factory;
 
     @Inject
-    Users users;
-
-    @Transactional
-    User insertUser() {
-        Users.CreateAttrs attrs = new Users.CreateAttrs();
-
-        attrs.firstName = "Jane";
-        attrs.lastName = "Doe";
-        attrs.emailAddress = "jane.doe@example.com";
-
-        return users.createUser(attrs);
-    }
+    UserController controller;
 
     @Nested
     @DisplayName("Create")
@@ -126,7 +114,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Shows the user")
         void show() {
-            User user = insertUser();
+            User user = factory.insertUser();
             User result = controller.show(user.id);
 
             assertEquals(user.id, result.id);
@@ -135,7 +123,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Shows the user (integration)")
         void showIntegration() {
-            User user = insertUser();
+            User user = factory.insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +148,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user")
         void updatesUser() {
-            User user = insertUser();
+            User user = factory.insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
 
             params.firstName = "Janeth";
@@ -176,7 +164,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Updates the user (integration)")
         void updatesUserIntegration() {
-            User user = insertUser();
+            User user = factory.insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
 
             params.firstName = "Janeth";
@@ -202,7 +190,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Invalid parameters (integration)")
         void invalidParametersIntegration() {
-            User user = insertUser();
+            User user = factory.insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
 
             params.firstName = "";
@@ -227,7 +215,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Missing parameters (integration)")
         void missingParametersIntegration() {
-            User user = insertUser();
+            User user = factory.insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -249,7 +237,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user")
         void delete() {
-            User user = insertUser();
+            User user = factory.insertUser();
             User result = controller.delete(user.id);
 
             assertEquals(user.id, result.id);
@@ -259,7 +247,7 @@ class UserControllerTest {
         @Test
         @DisplayName("Deletes the user (integration)")
         void deleteIntegration() {
-            User user = insertUser();
+            User user = factory.insertUser();
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)

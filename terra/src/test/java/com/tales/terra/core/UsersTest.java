@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -13,43 +12,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.github.f4b6a3.uuid.UuidCreator;
-
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 
 @QuarkusTest
 public class UsersTest {
     @Inject
+    TestFactory factory;
+
+    @Inject
     Users users;
-
-    // TODO: Move this to a factory
-    @Transactional
-    User insertUser() {
-        HashMap<String, Object> hashMap = new HashMap<>();
-
-        return insertUser(hashMap);
-    }
-
-    @Transactional
-    User insertUser(HashMap<String, Object> hashMap) {
-        UUID id = UuidCreator.getTimeOrderedEpoch();
-        LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
-        User user = new User();
-
-        user.id = (UUID) hashMap.getOrDefault("id", id);
-        user.firstName = (String) hashMap.getOrDefault("firstName", "Jane");
-        user.lastName = (String) hashMap.getOrDefault("lastName", "Doe");
-        user.emailAddress = (String) hashMap.getOrDefault("emailAddress", "jane.doe@example.com");
-        user.createdAt = (LocalDateTime) hashMap.getOrDefault("createdAt", timestamp);
-        user.updatedAt = (LocalDateTime) hashMap.getOrDefault("updatedAt", timestamp);
-        user.deletedAt = (LocalDateTime) hashMap.getOrDefault("deletedAt", null);
-
-        users.persist(user);
-
-        return user;
-    }
 
     @Nested
     @DisplayName("Get user")
@@ -57,7 +29,7 @@ public class UsersTest {
         @Test
         @DisplayName("Returns the user")
         void returnsUser() {
-            User user = insertUser();
+            User user = factory.insertUser();
             User result = users.getUser(user.id);
 
             assertEquals(user.id, result.id);
@@ -112,7 +84,7 @@ public class UsersTest {
         @Test
         @DisplayName("Returns the updated the user")
         void returnsUser() {
-            User user = insertUser();
+            User user = factory.insertUser();
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
             attrs.firstName = "Janeth";
@@ -137,7 +109,7 @@ public class UsersTest {
 
             hashMap.put("deletedAt", timestamp);
 
-            User user = insertUser(hashMap);
+            User user = factory.insertUser(hashMap);
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
             assertThrows(IsDeletedException.class, () -> users.updateUser(user.id, attrs));
@@ -159,7 +131,7 @@ public class UsersTest {
         @Test
         @DisplayName("Returns the deleted user")
         void returnsUser() {
-            User user = insertUser();
+            User user = factory.insertUser();
             User result = users.deleteUser(user.id);
 
             assertEquals(user.id, result.id);
@@ -179,7 +151,7 @@ public class UsersTest {
 
             hashMap.put("deletedAt", timestamp);
 
-            User user = insertUser(hashMap);
+            User user = factory.insertUser(hashMap);
 
             assertThrows(IsDeletedException.class, () -> users.deleteUser(user.id));
         }
