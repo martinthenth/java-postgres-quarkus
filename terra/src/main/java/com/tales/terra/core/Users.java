@@ -82,9 +82,9 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
         User user = getUser(id);
 
         if (user == null)
-            throw new RuntimeException("Not found");
+            throw new NotFoundException();
         if (user.deletedAt != null)
-            throw new RuntimeException("Is deleted");
+            throw new IsDeletedException();
 
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 
@@ -108,9 +108,9 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
         User user = getUser(id);
 
         if (user == null)
-            throw new RuntimeException("Not found");
+            throw new NotFoundException();
         if (user.deletedAt != null)
-            throw new RuntimeException("Is deleted");
+            throw new IsDeletedException();
 
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 

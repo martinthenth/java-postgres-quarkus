@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import com.github.f4b6a3.uuid.UuidCreator;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -19,15 +24,31 @@ public class UsersTest {
     @Inject
     Users users;
 
+    // TODO: Move this to a factory
     @Transactional
     User insertUser() {
-        Users.CreateAttrs attrs = new Users.CreateAttrs();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
-        attrs.firstName = "Jane";
-        attrs.lastName = "Doe";
-        attrs.emailAddress = "jane.doe@example.com";
+        return insertUser(hashMap);
+    }
 
-        return users.createUser(attrs);
+    @Transactional
+    User insertUser(HashMap<String, Object> hashMap) {
+        UUID id = UuidCreator.getTimeOrderedEpoch();
+        LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
+        User user = new User();
+
+        user.id = (UUID) hashMap.getOrDefault("id", id);
+        user.firstName = (String) hashMap.getOrDefault("firstName", "Jane");
+        user.lastName = (String) hashMap.getOrDefault("lastName", "Doe");
+        user.emailAddress = (String) hashMap.getOrDefault("emailAddress", "jane.doe@example.com");
+        user.createdAt = (LocalDateTime) hashMap.getOrDefault("createdAt", timestamp);
+        user.updatedAt = (LocalDateTime) hashMap.getOrDefault("updatedAt", timestamp);
+        user.deletedAt = (LocalDateTime) hashMap.getOrDefault("deletedAt", null);
+
+        users.persist(user);
+
+        return user;
     }
 
     @Nested
@@ -111,7 +132,15 @@ public class UsersTest {
         @Test
         @DisplayName("Throws an exception when the user is deleted")
         void throwsExceptionWhenUserIsDeleted() {
-            assertEquals(true, false);
+            LocalDateTime timestamp = LocalDateTime.now();
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("deletedAt", timestamp);
+
+            User user = insertUser(hashMap);
+            Users.UpdateAttrs attrs = new Users.UpdateAttrs();
+
+            assertThrows(IsDeletedException.class, () -> users.updateUser(user.id, attrs));
         }
 
         @Test
@@ -120,7 +149,7 @@ public class UsersTest {
             UUID id = UUID.randomUUID();
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
-            assertThrows(RuntimeException.class, () -> users.updateUser(id, attrs));
+            assertThrows(NotFoundException.class, () -> users.updateUser(id, attrs));
         }
     }
 
@@ -145,7 +174,14 @@ public class UsersTest {
         @Test
         @DisplayName("Throws an exception when the user is deleted")
         void throwsExceptionWhenUserIsDeleted() {
-            assertEquals(true, false);
+            LocalDateTime timestamp = LocalDateTime.now();
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            hashMap.put("deletedAt", timestamp);
+
+            User user = insertUser(hashMap);
+
+            assertThrows(IsDeletedException.class, () -> users.deleteUser(user.id));
         }
 
         @Test
@@ -153,7 +189,7 @@ public class UsersTest {
         void throwsExceptionWhenUserDoesNotExist() {
             UUID id = UUID.randomUUID();
 
-            assertThrows(RuntimeException.class, () -> users.deleteUser(id));
+            assertThrows(NotFoundException.class, () -> users.deleteUser(id));
         }
     }
 }
