@@ -2,8 +2,6 @@ package com.tales.terra.core;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -14,15 +12,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.github.f4b6a3.uuid.UuidCreator;
 
 @Entity
 @Table(name = "users")
 public class User {
-    // TODO: Generate uuid v7
-    // TODO: Make fields final
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    public UUID id;
+    public UUID id = UuidCreator.getTimeOrderedEpoch();
     @Column(name = "first_name", columnDefinition = "TEXT", nullable = false)
     public String firstName;
     @Column(name = "last_name", columnDefinition = "TEXT", nullable = false)

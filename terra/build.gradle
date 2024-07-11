@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'com.github.f4b6a3:uuid-creator:6.0.0'
     implementation 'io.quarkus:quarkus-arc'
     implementation "io.quarkus:quarkus-grpc"
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
