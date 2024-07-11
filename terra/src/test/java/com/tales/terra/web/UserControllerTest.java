@@ -1,4 +1,4 @@
-package com.tales.terra;
+package com.tales.terra.web;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import com.tales.terra.core.User;
 import com.tales.terra.core.Users;
-import com.tales.terra.web.UserController;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

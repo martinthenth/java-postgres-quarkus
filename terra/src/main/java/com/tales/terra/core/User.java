@@ -19,21 +19,21 @@ import com.github.f4b6a3.uuid.UuidCreator;
 public class User {
     @Id
     public UUID id = UuidCreator.getTimeOrderedEpoch();
-    @Column(name = "first_name", columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     public String firstName;
-    @Column(name = "last_name", columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     public String lastName;
-    @Column(name = "email_address", columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     public String emailAddress;
     @CreationTimestamp
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime createdAt;
     @UpdateTimestamp
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP", nullable = false)
+    @Column(nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime updatedAt;
-    @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
+    @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     public LocalDateTime deletedAt;
 }
