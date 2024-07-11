@@ -10,6 +10,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class Users implements PanacheRepositoryBase<User, UUID> {
@@ -38,11 +39,27 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      * Gets the user by id.
      * 
      * @param id
-     * @return a User object
+     * @return a User object or nil
      */
     @Transactional
     public User getUser(UUID id) {
-        return findById(id);
+        return find("id = ?1 AND deletedAt IS NULL", id).firstResult();
+    }
+
+    /**
+     * Fetches the user by id.
+     * 
+     * @param id
+     * @return a User object
+     */
+    @Transactional
+    public User fetchUser(UUID id) {
+        User user = getUser(id);
+
+        if (user == null)
+            throw new NotFoundException();
+
+        return user;
     }
 
     /**
@@ -79,13 +96,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      */
     @Transactional
     public User updateUser(UUID id, UpdateAttrs attrs) {
-        User user = getUser(id);
-
-        if (user == null)
-            throw new NotFoundException();
-        if (user.deletedAt != null)
-            throw new IsDeletedException();
-
+        User user = fetchUser(id);
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 
         user.firstName = attrs.firstName;
@@ -105,13 +116,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      */
     @Transactional
     public User deleteUser(UUID id) {
-        User user = getUser(id);
-
-        if (user == null)
-            throw new NotFoundException();
-        if (user.deletedAt != null)
-            throw new IsDeletedException();
-
+        User user = fetchUser(id);
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 
         user.updatedAt = timestamp;

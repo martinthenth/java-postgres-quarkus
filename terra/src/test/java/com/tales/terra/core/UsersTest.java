@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 @QuarkusTest
 public class UsersTest {
@@ -48,6 +49,33 @@ public class UsersTest {
             User result = users.getUser(id);
 
             assertEquals(null, result);
+        }
+    }
+
+    @Nested
+    @DisplayName("Fetch user")
+    class FetchUser {
+        @Test
+        @DisplayName("Returns the user")
+        void returnsUser() {
+            User user = factory.insertUser();
+            User result = users.fetchUser(user.id);
+
+            assertEquals(user.id, result.id);
+            assertEquals(user.firstName, result.firstName);
+            assertEquals(user.lastName, result.lastName);
+            assertEquals(user.emailAddress, result.emailAddress);
+            assertEquals(user.createdAt, result.createdAt);
+            assertEquals(user.updatedAt, result.updatedAt);
+            assertEquals(user.deletedAt, result.deletedAt);
+        }
+
+        @Test
+        @DisplayName("Returns a null when the user does not exist")
+        void throwsExceptionWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+
+            assertThrows(NotFoundException.class, () -> users.fetchUser(id));
         }
     }
 
@@ -112,7 +140,7 @@ public class UsersTest {
             User user = factory.insertUser(hashMap);
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
-            assertThrows(IsDeletedException.class, () -> users.updateUser(user.id, attrs));
+            assertThrows(NotFoundException.class, () -> users.updateUser(user.id, attrs));
         }
 
         @Test
@@ -153,7 +181,7 @@ public class UsersTest {
 
             User user = factory.insertUser(hashMap);
 
-            assertThrows(IsDeletedException.class, () -> users.deleteUser(user.id));
+            assertThrows(NotFoundException.class, () -> users.deleteUser(user.id));
         }
 
         @Test

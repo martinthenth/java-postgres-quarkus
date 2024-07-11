@@ -5,7 +5,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,23 +31,8 @@ class UserControllerTest {
     @DisplayName("Create")
     class Create {
         @Test
-        @DisplayName("Creates a user")
-        void createsUser() {
-            UserController.CreateParams params = new UserController.CreateParams();
-
-            params.firstName = "Jane";
-            params.lastName = "Doe";
-            params.emailAddress = "jane.doe@example.com";
-
-            User result = controller.create(params);
-
-            assertEquals(params.firstName, result.firstName);
-            assertEquals(params.lastName, result.lastName);
-        }
-
-        @Test
-        @DisplayName("Creates a user (integration)")
-        void createsUserIntegration() {
+        @DisplayName("Renders the created user")
+        void rendersUser() {
             UserController.CreateParams params = new UserController.CreateParams();
 
             params.firstName = "Jane";
@@ -67,8 +53,14 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Invalid parameters (integration)")
-        void invalidParametersIntegration() {
+        @DisplayName("Renders an error when the user already exists")
+        void rendersErrorWhenUserAlreadyExists() {
+            assertEquals(true, false);
+        }
+
+        @Test
+        @DisplayName("Renders an error when the parameters are invalid")
+        void rendersErrorWhenParametersInvalid() {
             UserController.CreateParams params = new UserController.CreateParams();
 
             params.firstName = "";
@@ -93,8 +85,8 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Missing parameters (integration)")
-        void missingParametersIntegration() {
+        @DisplayName("Renders an error when the parameters are missing")
+        void rendersErrorWhenParametersMissing() {
             given()
                     .contentType(MediaType.APPLICATION_JSON)
                     .when()
@@ -112,17 +104,8 @@ class UserControllerTest {
     @DisplayName("Show")
     class Show {
         @Test
-        @DisplayName("Shows the user")
-        void show() {
-            User user = factory.insertUser();
-            User result = controller.show(user.id);
-
-            assertEquals(user.id, result.id);
-        }
-
-        @Test
-        @DisplayName("Shows the user (integration)")
-        void showIntegration() {
+        @DisplayName("Renders the user")
+        void rendersUser() {
             User user = factory.insertUser();
 
             given()
@@ -140,30 +123,27 @@ class UserControllerTest {
                     .body("deletedAt", nullValue());
 
         }
+
+        @Test
+        @DisplayName("Renders an error when the user does not exist")
+        void rendersErrorWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", id)
+                    .when().get("/user/{id}")
+                    .then()
+                    .statusCode(404);
+        }
     }
 
     @Nested
     @DisplayName("Update")
     class Update {
         @Test
-        @DisplayName("Updates the user")
-        void updatesUser() {
-            User user = factory.insertUser();
-            UserController.UpdateParams params = new UserController.UpdateParams();
-
-            params.firstName = "Janeth";
-            params.lastName = "Doer";
-
-            User result = controller.update(user.id, params);
-
-            assertEquals(user.id, result.id);
-            assertEquals(params.firstName, result.firstName);
-            assertEquals(params.lastName, result.lastName);
-        }
-
-        @Test
-        @DisplayName("Updates the user (integration)")
-        void updatesUserIntegration() {
+        @DisplayName("Renders the updated user")
+        void rendersUser() {
             User user = factory.insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
 
@@ -188,8 +168,27 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Invalid parameters (integration)")
-        void invalidParametersIntegration() {
+        @DisplayName("Renders an error when the user does not exist")
+        void rendersErrorWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+            UserController.UpdateParams params = new UserController.UpdateParams();
+
+            params.firstName = "Janeth";
+            params.lastName = "Doer";
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", id)
+                    .body(params)
+                    .when()
+                    .patch("/user/{id}")
+                    .then()
+                    .statusCode(404);
+        }
+
+        @Test
+        @DisplayName("Renders an error when the parameters are invalid")
+        void rendersErrorWhenParametersInvalid() {
             User user = factory.insertUser();
             UserController.UpdateParams params = new UserController.UpdateParams();
 
@@ -213,8 +212,8 @@ class UserControllerTest {
         }
 
         @Test
-        @DisplayName("Missing parameters (integration)")
-        void missingParametersIntegration() {
+        @DisplayName("Renders an error when the parameters are missing")
+        void rendersErrorWhenParametersMissing() {
             User user = factory.insertUser();
 
             given()
@@ -235,18 +234,8 @@ class UserControllerTest {
     @DisplayName("Delete")
     class Delete {
         @Test
-        @DisplayName("Deletes the user")
-        void delete() {
-            User user = factory.insertUser();
-            User result = controller.delete(user.id);
-
-            assertEquals(user.id, result.id);
-            assertNotEquals(null, result.deletedAt);
-        }
-
-        @Test
-        @DisplayName("Deletes the user (integration)")
-        void deleteIntegration() {
+        @DisplayName("Renders the deleted user")
+        void rendersUser() {
             User user = factory.insertUser();
 
             given()
@@ -262,6 +251,19 @@ class UserControllerTest {
                     .body("createdAt", is(user.createdAt.toString()))
                     .body("updatedAt", not(is(user.updatedAt.toString())))
                     .body("deletedAt", is(not(nullValue())));
+        }
+
+        @Test
+        @DisplayName("Renders an error when the user does not exist")
+        void rendersErrorWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", id)
+                    .when().delete("/user/{id}")
+                    .then()
+                    .statusCode(404);
         }
     }
 }

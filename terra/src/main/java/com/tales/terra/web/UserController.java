@@ -75,7 +75,7 @@ public class UserController {
     @GET
     @Path("{id}")
     public User show(@NotNull UUID id) {
-        return users.getUser(id);
+        return users.fetchUser(id);
     }
 
     /**
