@@ -11,6 +11,7 @@ import com.github.f4b6a3.uuid.UuidCreator;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
 @ApplicationScoped
@@ -70,7 +71,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      * @return a User object
      */
     @Transactional
-    public User createUser(CreateAttrs attrs) {
+    public User createUser(@Valid CreateAttrs attrs) {
         UUID id = UuidCreator.getTimeOrderedEpoch();
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
         User user = new User();
@@ -101,7 +102,7 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
      * @return a User object
      */
     @Transactional
-    public User updateUser(UUID id, UpdateAttrs attrs) {
+    public User updateUser(UUID id, @Valid UpdateAttrs attrs) {
         User user = fetchUser(id);
         LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
 

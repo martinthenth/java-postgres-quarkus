@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
 
 @QuarkusTest
 public class UsersTest {
@@ -110,6 +111,18 @@ public class UsersTest {
 
             assertThrows(ConflictException.class, () -> users.createUser(attrs));
         }
+
+        @Test
+        @DisplayName("Throws an exception when the parameters are invalid")
+        void throwsExceptionWhenParametersInvalid() {
+            Users.CreateAttrs attrs = new Users.CreateAttrs();
+
+            attrs.firstName = "";
+            attrs.lastName = "";
+            attrs.emailAddress = "";
+
+            assertThrows(ConstraintViolationException.class, () -> users.createUser(attrs));
+        }
     }
 
     @Nested
@@ -146,6 +159,9 @@ public class UsersTest {
             User user = factory.insertUser(hashMap);
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
+            attrs.firstName = "Janeth";
+            attrs.lastName = "Doer";
+
             assertThrows(NotFoundException.class, () -> users.updateUser(user.id, attrs));
         }
 
@@ -155,7 +171,22 @@ public class UsersTest {
             UUID id = UUID.randomUUID();
             Users.UpdateAttrs attrs = new Users.UpdateAttrs();
 
+            attrs.firstName = "Janeth";
+            attrs.lastName = "Doer";
+
             assertThrows(NotFoundException.class, () -> users.updateUser(id, attrs));
+        }
+
+        @Test
+        @DisplayName("Throws an exception when the parameters are invalid")
+        void throwsExceptionWhenParametersInvalid() {
+            UUID id = UUID.randomUUID();
+            Users.UpdateAttrs attrs = new Users.UpdateAttrs();
+
+            attrs.firstName = "";
+            attrs.lastName = "";
+
+            assertThrows(ConstraintViolationException.class, () -> users.updateUser(id, attrs));
         }
     }
 
