@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
 
 @QuarkusTest
 public class UsersTest {
@@ -89,7 +88,7 @@ public class UsersTest {
 
             attrs.firstName = "Jane";
             attrs.lastName = "Doe";
-            attrs.emailAddress = "jane.doe@example.com";
+            attrs.emailAddress = "jane.doe987@example.com";
 
             User result = users.createUser(attrs);
 
@@ -102,7 +101,14 @@ public class UsersTest {
         @Test
         @DisplayName("Throws an exception when the user already exists")
         void throwsExceptionWhenUserAlreadyExists() {
-            assertEquals(true, false);
+            User user = factory.insertUser();
+            Users.CreateAttrs attrs = new Users.CreateAttrs();
+
+            attrs.firstName = user.firstName;
+            attrs.lastName = user.lastName;
+            attrs.emailAddress = user.emailAddress;
+
+            assertThrows(ConflictException.class, () -> users.createUser(attrs));
         }
     }
 

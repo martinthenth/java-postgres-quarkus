@@ -4,13 +4,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.UUID;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.github.f4b6a3.uuid.UuidCreator;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.ws.rs.NotFoundException;
 
 @ApplicationScoped
 public class Users implements PanacheRepositoryBase<User, UUID> {
@@ -82,9 +83,14 @@ public class Users implements PanacheRepositoryBase<User, UUID> {
         user.updatedAt = timestamp;
         user.deletedAt = null;
 
-        persist(user);
+        try {
+            persist(user);
+            flush();
 
-        return user;
+            return user;
+        } catch (ConstraintViolationException e) {
+            throw new ConflictException();
+        }
     }
 
     /**

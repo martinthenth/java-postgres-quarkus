@@ -1,5 +1,7 @@
 package com.tales.terra.web;
 
+import com.tales.terra.core.ConflictException;
+import com.tales.terra.core.NotFoundException;
 import com.tales.terra.core.User;
 import com.tales.terra.core.Users;
 
@@ -13,6 +15,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
 
@@ -62,7 +66,11 @@ public class UserController {
         attrs.lastName = params.lastName;
         attrs.emailAddress = params.emailAddress;
 
-        return users.createUser(attrs);
+        try {
+            return users.createUser(attrs);
+        } catch (ConflictException e) {
+            throw new WebApplicationException(Response.Status.CONFLICT);
+        }
     }
 
     /**
@@ -75,7 +83,11 @@ public class UserController {
     @GET
     @Path("{id}")
     public User show(@NotNull UUID id) {
-        return users.fetchUser(id);
+        try {
+            return users.fetchUser(id);
+        } catch (NotFoundException e) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
     }
 
     /**
@@ -94,7 +106,11 @@ public class UserController {
         attrs.firstName = params.firstName;
         attrs.lastName = params.lastName;
 
-        return users.updateUser(id, attrs);
+        try {
+            return users.updateUser(id, attrs);
+        } catch (NotFoundException e) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
     }
 
     /**
@@ -107,6 +123,10 @@ public class UserController {
     @DELETE
     @Path("{id}")
     public User delete(@NotNull UUID id) {
-        return users.deleteUser(id);
+        try {
+            return users.deleteUser(id);
+        } catch (NotFoundException e) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
     }
 }

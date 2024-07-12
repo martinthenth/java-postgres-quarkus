@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.UUID;
 
@@ -37,7 +36,7 @@ class UserControllerTest {
 
             params.firstName = "Jane";
             params.lastName = "Doe";
-            params.emailAddress = "jane.doe@example.com";
+            params.emailAddress = "jane.doe123@example.com";
 
             given()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -55,7 +54,20 @@ class UserControllerTest {
         @Test
         @DisplayName("Renders an error when the user already exists")
         void rendersErrorWhenUserAlreadyExists() {
-            assertEquals(true, false);
+            User user = factory.insertUser();
+            UserController.CreateParams params = new UserController.CreateParams();
+
+            params.firstName = user.firstName;
+            params.lastName = user.lastName;
+            params.emailAddress = user.emailAddress;
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(params)
+                    .when()
+                    .post("/user")
+                    .then()
+                    .statusCode(409);
         }
 
         @Test
