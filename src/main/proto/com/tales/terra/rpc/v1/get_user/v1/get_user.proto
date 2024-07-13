@@ -2,12 +2,14 @@ syntax = "proto3";
 
 package com.tales.terra.rpc.v1.get_user.v1;
 
+import "com/tales/terra/shared/v1/user/v1/user.proto";
+
 option java_multiple_files = true;
 
 message GetUserRequest {
-  string name = 1;
+  string id = 1;
 }
 
 message GetUserResponse {
-  string message = 1;
+  shared.v1.user.v1.User user = 1;
 }

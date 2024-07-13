@@ -2,12 +2,16 @@ syntax = "proto3";
 
 package com.tales.terra.rpc.v1.create_user.v1;
 
+import "com/tales/terra/shared/v1/user/v1/user.proto";
+
 option java_multiple_files = true;
 
 message CreateUserRequest {
-  string name = 1;
+  string first_name = 1;
+  string last_name = 2;
+  string email_address = 3;
 }
 
 message CreateUserResponse {
-  string message = 1;
+  shared.v1.user.v1.User user = 1;
 }
