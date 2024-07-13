@@ -8,17 +8,23 @@ import com.tales.terra.rpc.v1.create_user.v1.CreateUserResponse;
 
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Uni;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 @GrpcService
 public class Server implements RpcService {
+    @Inject
+    UserHandler userHandler;
+
     @Override
+    @Transactional
     public Uni<GetUserResponse> getUser(GetUserRequest request) {
-        return Uni.createFrom()
-                .item(() -> GetUserResponse.newBuilder().setMessage("Hello " + request.getName()).build());
+        return userHandler.getUser(request);
     }
 
     @Override
+    @Transactional
     public Uni<CreateUserResponse> createUser(CreateUserRequest request) {
-        throw new UnsupportedOperationException();
+        return userHandler.createUser(request);
     }
 }
