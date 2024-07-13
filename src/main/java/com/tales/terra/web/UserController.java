@@ -51,6 +51,23 @@ public class UserController {
     }
 
     /**
+     * Show a user.
+     * This method handles GET requests to retrieve user information.
+     * 
+     * @param id
+     * @return a User object
+     */
+    @GET
+    @Path("{id}")
+    public User show(@NotNull UUID id) {
+        try {
+            return users.fetchUser(id);
+        } catch (NotFoundException e) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+    }
+
+    /**
      * Create a user.
      * This method handles POST requests to create a new user.
      * 
@@ -70,23 +87,6 @@ public class UserController {
             return users.createUser(attrs);
         } catch (ConflictException e) {
             throw new WebApplicationException(Response.Status.CONFLICT);
-        }
-    }
-
-    /**
-     * Show a user.
-     * This method handles GET requests to retrieve user information.
-     * 
-     * @param id
-     * @return a User object
-     */
-    @GET
-    @Path("{id}")
-    public User show(@NotNull UUID id) {
-        try {
-            return users.fetchUser(id);
-        } catch (NotFoundException e) {
-            throw new WebApplicationException(Response.Status.NOT_FOUND);
         }
     }
 

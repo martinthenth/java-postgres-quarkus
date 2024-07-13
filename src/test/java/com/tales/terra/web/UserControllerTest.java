@@ -27,6 +27,44 @@ class UserControllerTest {
     UserController controller;
 
     @Nested
+    @DisplayName("Show")
+    class Show {
+        @Test
+        @DisplayName("Renders the user")
+        void rendersUser() {
+            User user = factory.insertUser();
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", user.id)
+                    .when().get("/user/{id}")
+                    .then()
+                    .statusCode(200)
+                    .body("id", is(user.id.toString()))
+                    .body("firstName", is(user.firstName))
+                    .body("lastName", is(user.lastName))
+                    .body("emailAddress", is(user.emailAddress))
+                    .body("createdAt", is(user.createdAt.toString()))
+                    .body("updatedAt", is(user.updatedAt.toString()))
+                    .body("deletedAt", nullValue());
+
+        }
+
+        @Test
+        @DisplayName("Renders an error when the user does not exist")
+        void rendersErrorWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+
+            given()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .pathParam("id", id)
+                    .when().get("/user/{id}")
+                    .then()
+                    .statusCode(404);
+        }
+    }
+
+    @Nested
     @DisplayName("Create")
     class Create {
         @Test
@@ -109,44 +147,6 @@ class UserControllerTest {
                     .body("status", is(400))
                     .body("violations[0].field", is("create.params"))
                     .body("violations[0].message", is("must not be null"));
-        }
-    }
-
-    @Nested
-    @DisplayName("Show")
-    class Show {
-        @Test
-        @DisplayName("Renders the user")
-        void rendersUser() {
-            User user = factory.insertUser();
-
-            given()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .pathParam("id", user.id)
-                    .when().get("/user/{id}")
-                    .then()
-                    .statusCode(200)
-                    .body("id", is(user.id.toString()))
-                    .body("firstName", is(user.firstName))
-                    .body("lastName", is(user.lastName))
-                    .body("emailAddress", is(user.emailAddress))
-                    .body("createdAt", is(user.createdAt.toString()))
-                    .body("updatedAt", is(user.updatedAt.toString()))
-                    .body("deletedAt", nullValue());
-
-        }
-
-        @Test
-        @DisplayName("Renders an error when the user does not exist")
-        void rendersErrorWhenUserDoesNotExist() {
-            UUID id = UUID.randomUUID();
-
-            given()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .pathParam("id", id)
-                    .when().get("/user/{id}")
-                    .then()
-                    .statusCode(404);
         }
     }
 
