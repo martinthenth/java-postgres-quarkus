@@ -1,7 +1,8 @@
 package com.tales.terra.rpc;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,11 +16,15 @@ import com.tales.terra.rpc.v1.create_user.v1.CreateUserResponse;
 import com.tales.terra.rpc.v1.get_user.v1.GetUserRequest;
 import com.tales.terra.rpc.v1.get_user.v1.GetUserResponse;
 
+import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import io.quarkus.grpc.GrpcClient;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @QuarkusTest
@@ -27,7 +32,7 @@ class UserHandlerTest {
     @Inject
     TestFactory factory;
 
-    @GrpcClient("client-name")
+    @GrpcClient
     RpcService client;
 
     @Nested
@@ -47,22 +52,36 @@ class UserHandlerTest {
                     .subscribe()
                     .with(reply -> message.complete(reply));
 
-            try {
-                GetUserResponse response = message.get(1, TimeUnit.SECONDS);
+            GetUserResponse response = assertDoesNotThrow(() -> message.get(1, TimeUnit.SECONDS));
 
-                assertEquals(user.id.toString(), response.getUser().getId());
-                assertEquals(user.firstName, response.getUser().getFirstName());
-                assertEquals(user.lastName, response.getUser().getLastName());
-                assertEquals(user.emailAddress, response.getUser().getEmailAddress());
-                assertEquals(user.createdAt.toString(), response.getUser().getCreatedAt());
-                assertEquals(user.updatedAt.toString(), response.getUser().getUpdatedAt());
-                assertEquals("", response.getUser().getDeletedAt());
-            } catch (Exception e) {
-                fail(e);
-            }
+            assertEquals(user.id.toString(), response.getUser().getId());
+            assertEquals(user.firstName, response.getUser().getFirstName());
+            assertEquals(user.lastName, response.getUser().getLastName());
+            assertEquals(user.emailAddress, response.getUser().getEmailAddress());
+            assertEquals(user.createdAt.toString(), response.getUser().getCreatedAt());
+            assertEquals(user.updatedAt.toString(), response.getUser().getUpdatedAt());
+            assertEquals("", response.getUser().getDeletedAt());
         }
 
-        // TODO: Add tests for not found, etc
+        @Test
+        @DisplayName("Renders an error when the user does not exist")
+        void rendersErrorWhenUserDoesNotExist() {
+            UUID id = UUID.randomUUID();
+            CompletableFuture<GetUserResponse> message = new CompletableFuture<>();
+
+            client.getUser(
+                    GetUserRequest
+                            .newBuilder()
+                            .setId(id.toString())
+                            .build())
+                    .subscribe()
+                    .with(reply -> message.complete(reply), throwable -> message.completeExceptionally(throwable));
+
+            ExecutionException exception = assertThrows(ExecutionException.class,
+                    () -> message.get(1, TimeUnit.SECONDS));
+
+            assertEquals(Status.NOT_FOUND, ((StatusRuntimeException) exception.getCause()).getStatus());
+        }
     }
 
     @Nested
@@ -83,17 +102,54 @@ class UserHandlerTest {
                     .subscribe()
                     .with(reply -> message.complete(reply));
 
-            try {
-                CreateUserResponse response = message.get(1, TimeUnit.SECONDS);
+            CreateUserResponse response = assertDoesNotThrow(() -> message.get(1, TimeUnit.SECONDS));
 
-                assertEquals("Jane", response.getUser().getFirstName());
-                assertEquals("Doe", response.getUser().getLastName());
-                assertEquals("jane.doe@example.com", response.getUser().getEmailAddress());
-            } catch (Exception e) {
-                fail(e);
-            }
+            assertEquals("Jane", response.getUser().getFirstName());
+            assertEquals("Doe", response.getUser().getLastName());
+            assertEquals("jane.doe@example.com", response.getUser().getEmailAddress());
         }
 
-        // TODO: Add tests for validation error and already exists, etc
+        @Test
+        @DisplayName("Renders an error when the user already exists")
+        void rendersErrorWhenUserAlreadyExists() {
+            User user = factory.insertUser();
+            CompletableFuture<CreateUserResponse> message = new CompletableFuture<>();
+
+            client.createUser(
+                    CreateUserRequest
+                            .newBuilder()
+                            .setFirstName(user.firstName)
+                            .setLastName(user.lastName)
+                            .setEmailAddress(user.emailAddress)
+                            .build())
+                    .subscribe()
+                    .with(reply -> message.complete(reply), throwable -> message.completeExceptionally(throwable));
+
+            ExecutionException exception = assertThrows(ExecutionException.class,
+                    () -> message.get(1, TimeUnit.SECONDS));
+
+            assertEquals(Status.ALREADY_EXISTS, ((StatusRuntimeException) exception.getCause()).getStatus());
+        }
+
+        @Test
+        @DisplayName("Renders an error when the parameters are invalid")
+        void rendersErrorWhenParametersInvalid() {
+            CompletableFuture<CreateUserResponse> message = new CompletableFuture<>();
+
+            client.createUser(
+                    CreateUserRequest
+                            .newBuilder()
+                            .setFirstName("")
+                            .setLastName("")
+                            .setEmailAddress("")
+                            .build())
+                    .subscribe()
+                    .with(reply -> message.complete(reply), throwable -> message.completeExceptionally(throwable));
+
+            ExecutionException exception = assertThrows(ExecutionException.class,
+                    () -> message.get(1, TimeUnit.SECONDS));
+
+            assertEquals(Status.INVALID_ARGUMENT, ((StatusRuntimeException) exception.getCause()).getStatus());
+        }
     }
 }
