@@ -9,9 +9,6 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = { "emailAddress" }) })
 public class User {
@@ -27,11 +24,9 @@ public class User {
     @Column(nullable = false)
     public String emailAddress;
 
-    @CreationTimestamp
     @Column(nullable = false)
     public LocalDateTime createdAt;
 
-    @UpdateTimestamp
     @Column(nullable = false)
     public LocalDateTime updatedAt;
 
