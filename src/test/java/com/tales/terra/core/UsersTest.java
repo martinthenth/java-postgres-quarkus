@@ -17,7 +17,7 @@ import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 
 @QuarkusTest
-public class UsersTest {
+class UsersTest {
     @Inject
     TestFactory factory;
 

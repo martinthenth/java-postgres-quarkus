@@ -1,7 +1,7 @@
-package com.tales.terra.core;
+package com.tales.terra.rpc;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest
-class UsersNativeTest {
+class UserHandlerNativeTest {
 }

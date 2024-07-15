@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 @QuarkusTest
-public class UserHandlerTest {
+class UserHandlerTest {
     @Inject
     TestFactory factory;
 
